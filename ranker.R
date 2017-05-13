@@ -13,7 +13,7 @@ error.type1 <- function(n_obs, scale) {
 
 # -1 <= r1 < r2
 #  0 <= insignificant difference
-#  1 <= r1 > r2
+# +1 <= r1 > r2
 compare.ratings <- function(r1, r2, cl) {
   contingency = matrix(c(r1$likes, r1$dislikes,
                          r2$likes, r2$dislikes),
