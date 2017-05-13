@@ -6,16 +6,21 @@ DOMAIN <- "https://www.youtube.com/watch?v="
 # download and scrape
 download.rating <- function(video_id) {
   url <- paste0(DOMAIN, video_id)
-  page <- read_html(url)
-  buttons <- html_nodes(page, "button")
   
-  upvote <- head(which(html_attr(buttons, "title") == "I like this"), 1)
-  likes <- as.numeric(gsub(",", "", html_text(buttons[upvote])))
-  
-  downvote <- head(which(html_attr(buttons, "title") == "I dislike this"), 1)
-  dislikes <- as.numeric(gsub(",", "", html_text(buttons[downvote])))
-  
-  rating <- data.frame(likes, dislikes)
+  rating <- NULL
+  while (length(rating) < 2) {
+    page <- read_html(url)
+    buttons <- html_nodes(page, "button")
+    
+    upvote <- head(which(html_attr(buttons, "title") == "I like this"), 1)
+    likes <- as.numeric(gsub(",", "", html_text(buttons[upvote])))
+    
+    downvote <- head(which(html_attr(buttons, "title") == "I dislike this"), 1)
+    dislikes <- as.numeric(gsub(",", "", html_text(buttons[downvote])))
+    
+    rating <- data.frame(likes, dislikes)
+  }
+
   row.names(rating) <- video_id
   return(rating)
 }
