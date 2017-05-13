@@ -1,5 +1,6 @@
 library(rvest)
 
+# base URL
 DOMAIN <- "https://www.youtube.com/watch?v="
 
 # download and scrape
@@ -8,7 +9,7 @@ download.rating <- function(video_id) {
   page <- read_html(url)
   buttons <- html_nodes(page, "button")
   
-  upvote <- which(html_attr(buttons, "title") == "I like this")
+  upvote <- head(which(html_attr(buttons, "title") == "I like this"), 1)
   likes <- as.numeric(gsub(",", "", html_text(buttons[upvote])))
   
   downvote <- head(which(html_attr(buttons, "title") == "I dislike this"), 1)
