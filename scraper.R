@@ -8,7 +8,7 @@ download.rating <- function(video_id) {
   url <- paste0(DOMAIN, video_id)
   
   rating <- NULL
-  while (length(rating) < 2) {
+  while (is.null(rating) || nrow(rating) == 0) {
     page <- read_html(url)
     buttons <- html_nodes(page, "button")
     

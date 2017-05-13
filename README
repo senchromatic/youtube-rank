@@ -1,3 +1,6 @@
 Install:
-sudo apt-get install libssl-dev
+$ sudo apt-get install libssl-dev
+$ Rscript install.R
 
+Examples:
+$ Rscript example.R
