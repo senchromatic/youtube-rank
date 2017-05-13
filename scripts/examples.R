@@ -1,4 +1,4 @@
-source("ranker.R")
+source("scripts/ranker.R")
 
 # Ballade No. 1 in G minor, Op. 23 - Frederic Chopin
 generate.rankings("video_ids/chopin_ballade_1.csv")

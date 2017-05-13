@@ -1,4 +1,4 @@
-source("scraper.R")
+source("scripts/scraper.R")
 
 # number of false positives ~ n^MET + n^(MET - 1) + ... + n^(MET - IT + 1)
 MAX_ERROR_THRESHOLD <- 1
