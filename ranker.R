@@ -45,13 +45,10 @@ round.robin <- function(ratings) {
 # rank | video_id, performer, likes, dislikes, likes/dislikes
 generate.rankings <- function(id_file) {
   video_ids <- read.csv(id_file, stringsAsFactors=F)
-  print(video_ids)
   unordered_ratings <- download.ratings(video_ids$id)
-  print(unordered_ratings)
   unordered_scores <- round.robin(unordered_ratings)
   scores <- sort(unordered_scores, decreasing=T)
   ordering <- names(scores)
-  print(scores)
   unordered_rankings <- data.frame(performer=video_ids$performer)
   row.names(unordered_rankings) <- video_ids$id 
   rankings <- unordered_rankings[ordering, , drop=F]
