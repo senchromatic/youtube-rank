@@ -4,3 +4,4 @@ $ Rscript scripts/install.R
 
 Examples:
 $ Rscript scripts/examples.R
+(if working in RStudio, setwd to this repository's root directory)
