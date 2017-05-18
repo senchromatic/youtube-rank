@@ -1,3 +1,4 @@
+# setwd("path/to/repository/root/directory/")
 source("scripts/ranker.R")
 
 # Ballade No. 1 in G minor, Op. 23 - Frederic Chopin
