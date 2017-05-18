@@ -9,7 +9,7 @@ ITERATION_TIERS <- 3
 # where to save results table
 OUTPUT_DIR <- "output/"
 # pretty print settings
-FONT_SIZE <- 6
+FONT_SIZE <- 8
 PADDING <- unit(c(2,2), "mm")
 RESULTS_PER_PAGE <- 50
 
@@ -56,7 +56,7 @@ save.rankings <- function(output, id_file) {
 
   filepath <- paste0(OUTPUT_DIR, tools::file_path_sans_ext(basename(id_file)), ".pdf")
   pdf(filepath, width=8.5, height=11)
-  theme <- ttheme_minimal(base_size=FONT_SIZE, padding=PADDING)
+  theme <- ttheme_default(base_size=FONT_SIZE, padding=PADDING)
   for (page in 1:num_pages) {
     rows <- intersect(1:RESULTS_PER_PAGE+(page-1)*RESULTS_PER_PAGE, 1:nrow(output))
     subtable <- output[rows, , drop=F]
@@ -71,6 +71,7 @@ save.rankings <- function(output, id_file) {
 generate.rankings <- function(id_file, save_to_file=T) {
   video_ids <- read.csv(id_file, stringsAsFactors=F)
   unordered_ratings <- download.ratings(video_ids$id)
+  cat("Generating rankings...\n")
   unordered_scores <- round.robin(unordered_ratings)
   scores <- sort(unordered_scores, decreasing=T)
   ordering <- names(scores)
