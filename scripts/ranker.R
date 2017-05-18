@@ -11,6 +11,7 @@ OUTPUT_DIR <- "output/"
 # pretty print settings
 FONT_SIZE <- 6
 PADDING <- unit(c(2,2), "mm")
+RESULTS_PER_PAGE <- 50
 
 # acceptable type I error rate, given number of observations
 error.type1 <- function(n_obs, scale) {
@@ -49,12 +50,20 @@ round.robin <- function(ratings) {
   return(scores)
 }
 
-# write output to file
+# write output to local disk
 save.rankings <- function(output, id_file) {
+  num_pages <- ceiling(nrow(output) / RESULTS_PER_PAGE)
+
   filepath <- paste0(OUTPUT_DIR, tools::file_path_sans_ext(basename(id_file)), ".pdf")
   pdf(filepath, width=8.5, height=11)
   theme <- ttheme_minimal(base_size=FONT_SIZE, padding=PADDING)
-  grid.table(output, rows=rownames(output), cols=colnames(output), theme)
+  for (page in 1:num_pages) {
+    rows <- intersect(1:RESULTS_PER_PAGE+(page-1)*RESULTS_PER_PAGE, 1:nrow(output))
+    subtable <- output[rows, , drop=F]
+    grid.table(subtable, rows=rownames(subtable), cols=colnames(subtable), theme)
+    if (page < num_pages)
+      grid.newpage()
+  }
   invisible(dev.off())
 }
 
