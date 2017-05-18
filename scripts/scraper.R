@@ -34,7 +34,7 @@ download.ratings <- function(video_ids) {
     rating <- download.rating(video_id)
     ratings <- rbind(ratings, rating)
   }
-  cat("\rDone.                                                 \n")
+  cat("\rDownloading... 100% complete\n")
   
   return(ratings)
 }
