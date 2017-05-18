@@ -4,6 +4,8 @@ source("scripts/scraper.R")
 MAX_ERROR_THRESHOLD <- 1
 # number of terms in series
 ITERATION_TIERS <- 3
+# where to save results table
+OUTPUT_DIR <- "output/"
 
 # acceptable type I error rate, given number of observations
 error.type1 <- function(n_obs, scale) {
@@ -42,21 +44,23 @@ round.robin <- function(ratings) {
   return(scores)
 }
 
-# rank | video_id, performer, likes, dislikes, likes/dislikes
-generate.rankings <- function(id_file) {
+# rank | video_id, comments, likes, dislikes, likes/dislikes
+generate.rankings <- function(id_file, save_to_file=T) {
   video_ids <- read.csv(id_file, stringsAsFactors=F)
   unordered_ratings <- download.ratings(video_ids$id)
   unordered_scores <- round.robin(unordered_ratings)
   scores <- sort(unordered_scores, decreasing=T)
   ordering <- names(scores)
-  unordered_rankings <- data.frame(performer=video_ids$performer)
+  comment_colname = colnames(video_ids)[2]
+  unordered_rankings <- data.frame(comment_colname=video_ids[,2,drop=F])
   row.names(unordered_rankings) <- video_ids$id 
   rankings <- unordered_rankings[ordering, , drop=F]
   ratings <- unordered_ratings[ordering, , drop=F]
-  output <- data.frame(video_id=row.names(rankings), performer=rankings$performer,
+  output <- data.frame(video_id=row.names(rankings), comment_colname=rankings[,1],
                        likes=ratings$likes, dislikes=ratings$dislikes,
                        ratio=ratings$likes/ratings$dislikes,
                        score=scores)
+  colnames(output)[2] <- comment_colname
   row.names(output) <- 1:nrow(rankings)
   return(output)
 }
