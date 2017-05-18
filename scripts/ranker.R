@@ -1,4 +1,6 @@
 source("scripts/scraper.R")
+library(grid)
+library(gridExtra)
 
 # number of false positives ~ n^MET + n^(MET - 1) + ... + n^(MET - IT + 1)
 MAX_ERROR_THRESHOLD <- 1
@@ -6,6 +8,9 @@ MAX_ERROR_THRESHOLD <- 1
 ITERATION_TIERS <- 3
 # where to save results table
 OUTPUT_DIR <- "output/"
+# pretty print settings
+FONT_SIZE <- 6
+PADDING <- unit(c(2,2), "mm")
 
 # acceptable type I error rate, given number of observations
 error.type1 <- function(n_obs, scale) {
@@ -44,6 +49,15 @@ round.robin <- function(ratings) {
   return(scores)
 }
 
+# write output to file
+save.rankings <- function(output, id_file) {
+  filepath <- paste0(OUTPUT_DIR, tools::file_path_sans_ext(basename(id_file)), ".pdf")
+  pdf(filepath, width=8.5, height=11)
+  theme <- ttheme_minimal(base_size=FONT_SIZE, padding=PADDING)
+  grid.table(output, rows=rownames(output), cols=colnames(output), theme)
+  invisible(dev.off())
+}
+
 # rank | video_id, comments, likes, dislikes, likes/dislikes
 generate.rankings <- function(id_file, save_to_file=T) {
   video_ids <- read.csv(id_file, stringsAsFactors=F)
@@ -62,5 +76,7 @@ generate.rankings <- function(id_file, save_to_file=T) {
                        score=scores)
   colnames(output)[2] <- comment_colname
   row.names(output) <- 1:nrow(rankings)
+  if (save_to_file)
+    save.rankings(output, id_file)
   return(output)
 }
