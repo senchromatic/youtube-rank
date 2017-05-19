@@ -23,7 +23,7 @@ error.type1 <- function(n_obs, scale) {
 #  0 <= insignificant difference
 # +1 <= r1 > r2
 compare.ratings <- function(r1, r2, cl) {
-  contingency = matrix(c(r1$likes, r1$dislikes,
+  contingency <- matrix(c(r1$likes, r1$dislikes,
                          r2$likes, r2$dislikes),
                        byrow=F, nrow=2)
   odds_ratio <- fisher.test(contingency, conf.level=1-cl)$conf.int
@@ -44,8 +44,8 @@ round.robin <- function(ratings) {
       for (r2 in (r1+1):nr) {
         scale <- nr^(MAX_ERROR_THRESHOLD - i)
         score <- compare.ratings(ratings[r1,], ratings[r2,], error.type1(nr, scale))
-        scores[r1] = scores[r1] + score/scale
-        scores[r2] = scores[r2] - score/scale
+        scores[r1] <- scores[r1] + score/scale
+        scores[r2] <- scores[r2] - score/scale
       }
   return(scores)
 }
@@ -75,7 +75,7 @@ generate.rankings <- function(id_file, save_to_file=T) {
   unordered_scores <- round.robin(unordered_ratings)
   scores <- sort(unordered_scores, decreasing=T)
   ordering <- names(scores)
-  comment_colname = colnames(video_ids)[2]
+  comment_colname <- colnames(video_ids)[2]
   unordered_rankings <- data.frame(comment_colname=video_ids[,2,drop=F])
   row.names(unordered_rankings) <- video_ids$id 
   rankings <- unordered_rankings[ordering, , drop=F]
