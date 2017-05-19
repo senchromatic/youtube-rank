@@ -4,6 +4,7 @@ source("scripts/ranker.R")
 # disable scientific notation
 options(scipen=99)
 
+
 # Ballade No. 1 in G minor, Op. 23 - Frédéric Chopin
 generate.rankings("video_ids/chopin_ballade_1.csv")
 
