@@ -6,7 +6,8 @@ library(gridExtra)
 MAX_ERROR_THRESHOLD <- 1
 # number of terms in series
 ITERATION_TIERS <- 3
-# where to save results table
+# where to save results tables
+SAVED_DIR <- "saved/"
 OUTPUT_DIR <- "output/"
 # pretty print settings
 FONT_SIZE <- 8
@@ -50,11 +51,20 @@ round.robin <- function(ratings) {
   return(scores)
 }
 
-# write output to local disk
-save.rankings <- function(output, id_file) {
-  num_pages <- ceiling(nrow(output) / RESULTS_PER_PAGE)
+output.filepath <- function(directory, id_file, extension) {
+  basepath <- tools::file_path_sans_ext(basename(id_file))
+  return(paste0(directory, basepath, extension))
+}
 
-  filepath <- paste0(OUTPUT_DIR, tools::file_path_sans_ext(basename(id_file)), ".pdf")
+save.rdata <- function(output, id_file) {
+  filepath <- output.filepath(SAVED_DIR, id_file, ".RData")
+  save(output, file=filepath)
+}
+
+save.pdf <- function(output, id_file) {
+  num_pages <- ceiling(nrow(output) / RESULTS_PER_PAGE)
+  
+  filepath <- output.filepath(OUTPUT_DIR, id_file, ".pdf")
   pdf(filepath, width=8.5, height=11)
   theme <- ttheme_default(base_size=FONT_SIZE, padding=PADDING)
   for (page in 1:num_pages) {
@@ -64,7 +74,12 @@ save.rankings <- function(output, id_file) {
     if (page < num_pages)
       grid.newpage()
   }
-  invisible(dev.off())
+  invisible(dev.off()) 
+}
+
+save.rankings <- function(output, id_file) {
+  save.rdata(output, id_file)
+  save.pdf(output, id_file)
 }
 
 # rank | video_id, comments, likes, dislikes, likes/dislikes
