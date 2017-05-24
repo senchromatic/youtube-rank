@@ -51,16 +51,19 @@ round.robin <- function(ratings) {
   return(scores)
 }
 
+# helper function for generating filepath (with extension)
 output.filepath <- function(directory, id_file, extension) {
   basepath <- tools::file_path_sans_ext(basename(id_file))
   return(paste0(directory, basepath, extension))
 }
 
+# intermediate cache
 save.rdata <- function(output, id_file) {
   filepath <- output.filepath(SAVED_DIR, id_file, ".RData")
   save(output, file=filepath)
 }
 
+# save human-readable, final output
 save.pdf <- function(output, id_file) {
   num_pages <- ceiling(nrow(output) / RESULTS_PER_PAGE)
   
@@ -77,6 +80,7 @@ save.pdf <- function(output, id_file) {
   invisible(dev.off()) 
 }
 
+# save intermediate and final output
 save.rankings <- function(output, id_file) {
   save.rdata(output, id_file)
   save.pdf(output, id_file)
