@@ -86,8 +86,24 @@ save.rankings <- function(output, id_file) {
   save.pdf(output, id_file)
 }
 
+# load intermediate RData from local disk if cache is more recent than input
+retrieve.cache <- function(id_file) {
+  cache_filepath <- output.filepath(SAVED_DIR, id_file, ".RData")
+  if (!file.exists(cache_filepath))
+    return(NULL)
+  input_timestamp <- file.info(id_file)$mtime
+  cache_timestamp <- file.info(cache_filepath)$mtime
+  if (input_timestamp > cache_timestamp)
+    return(NULL)
+  load(cache_filepath)
+  return(output)
+}
+
 # rank | video_id, comments, likes, dislikes, likes/dislikes
 generate.rankings <- function(id_file, save_to_file=T) {
+  last_update <- retrieve.cache(id_file)
+  if (!is.null(last_update))
+    return(last_update)
   video_ids <- read.csv(id_file, stringsAsFactors=F)
   unordered_ratings <- download.all.ratings(video_ids$id)
   cat("Generating rankings...\n")
