@@ -26,7 +26,7 @@ download.rating <- function(video_id) {
 }
 
 # video_ids : vector of strings
-download.ratings <- function(video_ids) {
+download.all.ratings <- function(video_ids) {
   ratings <- data.frame()
   for (video_id in video_ids) {
     progress <- 100*nrow(ratings) / length(video_ids)

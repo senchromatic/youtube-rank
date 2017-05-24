@@ -70,7 +70,7 @@ save.rankings <- function(output, id_file) {
 # rank | video_id, comments, likes, dislikes, likes/dislikes
 generate.rankings <- function(id_file, save_to_file=T) {
   video_ids <- read.csv(id_file, stringsAsFactors=F)
-  unordered_ratings <- download.ratings(video_ids$id)
+  unordered_ratings <- download.all.ratings(video_ids$id)
   cat("Generating rankings...\n")
   unordered_scores <- round.robin(unordered_ratings)
   scores <- sort(unordered_scores, decreasing=T)
